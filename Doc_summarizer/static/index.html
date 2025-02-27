@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI PDF Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding-top: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .file-upload {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-upload input[type="file"] {
+            margin-bottom: 20px;
+        }
+
+        .file-upload button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .file-upload button:hover {
+            background-color: #45a049;
+        }
+
+        .results {
+            margin-top: 30px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .results h2 {
+            margin-top: 0;
+        }
+
+        .results pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .question-form {
+            margin-top: 30px;
+        }
+
+        .question-form input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .question-form button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .question-form button:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>AI PDF Assistant</h1>
+
+    <!-- File Upload Section -->
+    <div class="file-upload">
+        <h2>Upload PDF Document</h2>
+        <input type="file" id="fileInput" accept=".pdf">
+        <button onclick="uploadFile()">Upload File</button>
+        <p id="uploadMessage"></p>
+    </div>
+
+    <!-- Summary Section -->
+    <div class="results" id="summarySection" style="display: none;">
+        <h2>Document Summary</h2>
+        <pre id="summaryText"></pre>
+        <button onclick="generateSummary()">Generate Summary</button>
+    </div>
+
+    <!-- Question Section -->
+    <div class="question-form" id="questionForm" style="display: none;">
+        <h2>Ask a Question</h2>
+        <input type="text" id="questionInput" placeholder="Type your question here...">
+        <button onclick="askQuestion()">Ask Question</button>
+        <p id="answerMessage"></p>
+        <pre id="answerText"></pre>
+    </div>
+</div>
+
+<script>
+    let uploadedPdfContent = null;
+
+    // Upload file to the backend
+    function uploadFile() {
+        const fileInput = document.getElementById('fileInput');
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+
+        const uploadMessage = document.getElementById('uploadMessage');
+        uploadMessage.textContent = "Uploading...";
+
+        fetch('/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                uploadMessage.textContent = data.message;
+                document.getElementById('summarySection').style.display = 'block';
+                document.getElementById('questionForm').style.display = 'block';
+                uploadedPdfContent = data.message; // Store uploaded PDF content (if needed)
+            } else {
+                uploadMessage.textContent = data.error || 'An error occurred.';
+            }
+        })
+        .catch(error => {
+            uploadMessage.textContent = 'Error uploading file.';
+            console.error('Error:', error);
+        });
+    }
+
+    // Generate Summary
+    function generateSummary() {
+        fetch('/summarize', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.summary) {
+                document.getElementById('summaryText').textContent = data.summary;
+            } else {
+                document.getElementById('summaryText').textContent = data.error || 'Error generating summary.';
+            }
+        })
+        .catch(error => {
+            document.getElementById('summaryText').textContent = 'Error generating summary.';
+            console.error('Error:', error);
+        });
+    }
+
+    // Ask Question
+    function askQuestion() {
+        const question = document.getElementById('questionInput').value;
+
+        if (!question) {
+            document.getElementById('answerMessage').textContent = 'Please enter a question.';
+            return;
+        }
+
+        const data = { question: question };
+
+        fetch('/ask', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.answer) {
+                document.getElementById('answerText').textContent = data.answer;
+            } else {
+                document.getElementById('answerText').textContent = data.error || 'Error fetching answer.';
+            }
+        })
+        .catch(error => {
+            document.getElementById('answerText').textContent = 'Error fetching answer.';
+            console.error('Error:', error);
+        });
+    }
+</script>
+
+</body>
+</html>
