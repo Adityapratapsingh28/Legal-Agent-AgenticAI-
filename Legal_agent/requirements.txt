@@ -6,4 +6,7 @@ duckduckgo_search
 fastapi
 uvicorn
 groq
+wikipedia
 co
+Flask
+flask_cors
