@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Assistant AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'law-dark': '#121927',
+                        'law-darker': '#0A0F18',
+                        'law-accent': '#4F46E5',
+                        'law-accent-light': '#6366F1',
+                        'law-gold': '#D9A642',
+                        'law-text': '#D1D5DB',
+                        'law-text-dark': '#9CA3AF'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1E293B;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #4F46E5;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6366F1;
+        }
+        
+        /* Animation for typing indicator */
+        @keyframes blink {
+            0% { opacity: 0.2; }
+            20% { opacity: 1; }
+            100% { opacity: 0.2; }
+        }
+        
+        .typing-dot {
+            animation: blink 1.4s infinite both;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        /* Custom styles for markdown */
+        .markdown h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #D9A642;
+        }
+        
+        .markdown h2 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #D9A642;
+        }
+        
+        .markdown h3 {
+            font-size: 1.125rem;
+            font-weight: bold;
+            margin-top: 0.75rem;
+            margin-bottom: 0.5rem;
+            color: #D9A642;
+        }
+        
+        .markdown p {
+            margin-bottom: 0.75rem;
+        }
+        
+        .markdown ul, .markdown ol {
+            margin-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .markdown ul {
+            list-style-type: disc;
+        }
+        
+        .markdown ol {
+            list-style-type: decimal;
+        }
+        
+        .markdown li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .markdown blockquote {
+            border-left: 4px solid #4F46E5;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-right: 0;
+            font-style: italic;
+            color: #9CA3AF;
+        }
+        
+        .markdown hr {
+            border: 0;
+            height: 1px;
+            background: #374151;
+            margin: 1.5rem 0;
+        }
+        
+        .markdown table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .markdown th, .markdown td {
+            border: 1px solid #374151;
+            padding: 0.5rem;
+        }
+        
+        .markdown th {
+            background-color: #1E293B;
+            color: #D9A642;
+        }
+        
+        .markdown code {
+            font-family: monospace;
+            background-color: #1E293B;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+        }
+        
+        .markdown pre {
+            background-color: #1E293B;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        
+        .markdown pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+        
+        .markdown a {
+            color: #6366F1;
+            text-decoration: underline;
+        }
+        
+        .markdown a:hover {
+            color: #4F46E5;
+        }
+        
+        .markdown strong {
+            color: #D9A642;
+            font-weight: bold;
+        }
+        
+        .message.user {
+            background-color: #1E293B;
+        }
+        
+        .message.bot {
+            background-color: #121927;
+        }
+    </style>
+</head>
+<body class="bg-law-darker text-law-text min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-law-dark py-4 px-6 border-b border-gray-800 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-scale-balanced text-law-gold text-2xl"></i>
+                <h1 class="text-xl font-bold text-white">Legal Assistant AI</h1>
+            </div>
+            
+            <div class="text-sm text-law-text-dark">
+                Your virtual legal consultant
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="flex-grow flex flex-col md:flex-row container mx-auto p-4 gap-4">
+        <!-- Sidebar with information -->
+        <aside class="w-full md:w-1/4 bg-law-dark rounded-lg p-4 h-auto md:h-[calc(100vh-8rem)] flex flex-col">
+            <div class="mb-6">
+                <h2 class="text-law-gold font-bold text-lg mb-2 flex items-center">
+                    <i class="fas fa-circle-info mr-2"></i>Legal Assistant
+                </h2>
+                <p class="text-law-text-dark text-sm">
+                    I'm your AI-powered legal assistant. I can help with general legal questions, document analysis, and legal research.
+                </p>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-law-gold font-bold text-md mb-2 flex items-center">
+                    <i class="fas fa-lightbulb mr-2"></i>How I Can Help
+                </h3>
+                <ul class="text-law-text-dark text-sm space-y-2">
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-law-accent mt-1 mr-2"></i>
+                        <span>Answer legal questions</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-law-accent mt-1 mr-2"></i>
+                        <span>Explain legal concepts</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-law-accent mt-1 mr-2"></i>
+                        <span>Analyze legal documents</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-law-accent mt-1 mr-2"></i>
+                        <span>Provide legal resources</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-law-gold font-bold text-md mb-2 flex items-center">
+                    <i class="fas fa-triangle-exclamation mr-2"></i>Disclaimer
+                </h3>
+                <p class="text-law-text-dark text-sm">
+                    This AI assistant provides information for educational purposes only. It does not constitute legal advice. Consult with a qualified attorney for specific legal matters.
+                </p>
+            </div>
+            
+            <div class="mt-auto">
+                <h3 class="text-law-gold font-bold text-md mb-2 flex items-center">
+                    <i class="fas fa-keyboard mr-2"></i>Example Questions
+                </h3>
+                <div class="space-y-2">
+                    <button class="w-full text-left text-sm bg-law-darker hover:bg-gray-800 transition p-2 rounded text-law-text-dark example-question">
+                        What are the basic elements of a contract?
+                    </button>
+                    <button class="w-full text-left text-sm bg-law-darker hover:bg-gray-800 transition p-2 rounded text-law-text-dark example-question">
+                        Explain the difference between a felony and misdemeanor.
+                    </button>
+                    <button class="w-full text-left text-sm bg-law-darker hover:bg-gray-800 transition p-2 rounded text-law-text-dark example-question">
+                        What should I include in a cease and desist letter?
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Chat area -->
+        <section class="w-full md:w-3/4 flex flex-col h-[calc(100vh-8rem)]">
+            <!-- Chat messages -->
+            <div id="chat-messages" class="flex-grow overflow-y-auto p-4 space-y-4 bg-law-dark rounded-t-lg">
+                <!-- Welcome message -->
+                <div class="message bot p-4 rounded-lg shadow">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-3">
+                            <div class="w-8 h-8 rounded-full bg-law-accent flex items-center justify-center">
+                                <i class="fas fa-scale-balanced text-white"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex items-center mb-1">
+                                <span class="font-semibold text-law-gold">Legal Assistant</span>
+                                <span class="text-xs text-law-text-dark ml-2">Now</span>
+                            </div>
+                            <div class="markdown">
+                                <p>👋 Hello! I'm your Legal Assistant AI. How can I help you with your legal questions today?</p>
+                                <p>You can ask me about various legal topics, concepts, or procedures, and I'll provide informative responses to assist you.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Typing indicator (hidden by default) -->
+            <div id="typing-indicator" class="hidden p-4 bg-law-dark">
+                <div class="flex items-center space-x-2 text-law-text-dark">
+                    <div class="w-2 h-2 rounded-full bg-law-accent typing-dot"></div>
+                    <div class="w-2 h-2 rounded-full bg-law-accent typing-dot"></div>
+                    <div class="w-2 h-2 rounded-full bg-law-accent typing-dot"></div>
+                </div>
+            </div>
+            
+            <!-- Chat input -->
+            <div class="p-4 bg-law-dark border-t border-gray-800 rounded-b-lg">
+                <form id="chat-form" class="flex items-center space-x-2">
+                    <input 
+                        type="text" 
+                        id="user-input" 
+                        class="flex-grow bg-law-darker border border-gray-700 text-law-text rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-law-accent"
+                        placeholder="Type your legal question here..."
+                    >
+                    <button 
+                        type="submit" 
+                        class="bg-law-accent hover:bg-law-accent-light text-white p-3 rounded-lg transition-colors flex-shrink-0"
+                    >
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatForm = document.getElementById('chat-form');
+            const userInput = document.getElementById('user-input');
+            const chatMessages = document.getElementById('chat-messages');
+            const typingIndicator = document.getElementById('typing-indicator');
+            const exampleQuestions = document.querySelectorAll('.example-question');
+            
+            // Function to add a message to the chat
+            function addMessage(message, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isUser ? 'user' : 'bot'} p-4 rounded-lg shadow`;
+                
+                const iconClass = isUser ? 'fa-user' : 'fa-scale-balanced';
+                const iconBg = isUser ? 'bg-gray-700' : 'bg-law-accent';
+                const name = isUser ? 'You' : 'Legal Assistant';
+                
+                // Convert message to markdown if it's from the bot
+                const messageContent = isUser ? message : parseMarkdown(message);
+                
+                messageDiv.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-3">
+                            <div class="w-8 h-8 rounded-full ${iconBg} flex items-center justify-center">
+                                <i class="fas ${iconClass} text-white"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex items-center mb-1">
+                                <span class="font-semibold ${isUser ? 'text-white' : 'text-law-gold'}">${name}</span>
+                                <span class="text-xs text-law-text-dark ml-2">Now</span>
+                            </div>
+                            <div class="${isUser ? '' : 'markdown'}">
+                                ${messageContent}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Function to parse markdown
+            function parseMarkdown(text) {
+                // Configure marked options
+                marked.setOptions({
+                    breaks: true,
+                    gfm: true,
+                    headerIds: false,
+                    sanitize: false
+                });
+                
+                return marked.parse(text);
+            }
+            
+            // Function to send message to the server and get response
+            async function sendMessage(message) {
+                try {
+                    // Show typing indicator
+                    typingIndicator.classList.remove('hidden');
+                    
+                    // Send message to the server
+                    const response = await fetch('/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ message })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // Hide typing indicator
+                    typingIndicator.classList.add('hidden');
+                    
+                    // Add bot response to chat
+                    addMessage(data.response, false);
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    typingIndicator.classList.add('hidden');
+                    addMessage('Sorry, I encountered an error while processing your request. Please try again later.', false);
+                }
+            }
+            
+            // Form submission handler
+            chatForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const message = userInput.value.trim();
+                if (message) {
+                    // Add user message to chat
+                    addMessage(message, true);
+                    
+                    // Send to server
+                    sendMessage(message);
+                    
+                    // Clear input
+                    userInput.value = '';
+                }
+            });
+            
+            // Example questions click handler
+            exampleQuestions.forEach(button => {
+                button.addEventListener('click', function() {
+                    const question = this.textContent.trim();
+                    userInput.value = question;
+                    userInput.focus();
+                });
+            });
+            
+            // Focus input on page load
+            userInput.focus();
+            
+            // Simulate enter key on Ctrl+Enter
+            userInput.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    chatForm.dispatchEvent(new Event('submit'));
+                }
+            });
+        });
+    </script>
+</body>
+</html>
