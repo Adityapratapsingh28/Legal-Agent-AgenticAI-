@@ -80,7 +80,8 @@ Follow the steps below to set up and run **AI Legal Agent** on your local system
 
 ### 🛠 Prerequisites  
 - Install **Python 3.10** (recommended via Conda).  
-- Install **pip** for dependency management.  
+- Install **pip** for dependency management.
+- Install **Docker** for running the vector database.   
 
 ---
 
@@ -116,7 +117,22 @@ pip install -r requirements.txt
 # Step 7: Load the API keys into the system environment variables
 setx GROQ_API_KEY "___________________" & setx PHI_AI_KEY "_____________________"
 
-# Step 8: Run the Doc Summarizer application
+# Step 8: Create a vector database using Docker (Run in Git Bash)
+docker run -d \
+  -e POSTGRES_DB=ai \
+  -e POSTGRES_USER=ai \
+  -e POSTGRES_PASSWORD=ai \
+  -e PGDATA=/var/lib/postgresql/data/pgdata \
+  -v pgvolume:/var/lib/postgresql/data \
+  -p 5532:5432 \
+  --name pgvector \
+  phidata/pgvector:16
+
+# Step 8: Open Docker Desktop and start the 'pgvector' container manually
+
+
+
+# Step 9: Run the Doc Summarizer application
 python app.py
 
 -------------------------------------------------------------------------------------
