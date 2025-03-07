@@ -1,4 +1,4 @@
-#  	:man_judge: AI Legal Agent
+# AI Legal Agent :man_judge: 
 
 A cutting-edge Legal Supervisor designed to simplify and enhance legal workflows using artificial intelligence. This repository contains an advanced AI-powered tool with two primary features:
 
@@ -20,14 +20,14 @@ Answer legal queries with constitutional accuracy.
 **3️⃣ Bridge Tech and Law**  
 Democratize legal knowledge for all users.  
 
-## :keyboard:  Technology stack
+## Technology stack :keyboard: 
 
-### :signal_strength: groq (cloud llm provider)
-### :signal_strength: phidata (provide agentic framework)
-### :signal_strength: flask (backend & connection)
-### :signal_strength: html, css (frontend)
+- :signal_strength: groq (cloud llm provider)
+- :signal_strength: phidata (provide agentic framework)
+- :signal_strength: flask (backend & connection)
+- :signal_strength: html, css (frontend)
 
-## Features
+## Features :high_brightness:
 
 ### 1. Legal Document Summarizer
 The Legal Document Summarizer enables users to upload intricate legal documents then using llama llm models, it analyzes the text and delivers detailed yet concise summaries, making complex legal information easier to understand and apply.
@@ -39,7 +39,7 @@ The Ask from Agent feature allows users to submit any question about a legal doc
 In which the user can ask any query reagarding law, consitution, rules, different sections etc and our agent will give appropiate answer
 
 
-## ⚙️ Setup  
+## Setup ⚙️ 
 
 Clone the repository and install the required dependencies:  
 
