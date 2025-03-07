@@ -31,12 +31,20 @@ Democratize legal knowledge for all users.
 
 ### 1. Legal Document Summarizer
 The Legal Document Summarizer enables users to upload intricate legal documents then using llama llm models, it analyzes the text and delivers detailed yet concise summaries, making complex legal information easier to understand and apply.
+<img width="837" alt="image" src="https://github.com/user-attachments/assets/9c75a92d-aba1-48e2-a74a-60274e55acb5" />
+
 
 ### 2. Ask from Agent 
 The Ask from Agent feature allows users to submit any question about a legal document they’ve provided.The AI-powered Legal Agent analyzes the document and delivers precise, context-aware answers based on its content and the Indian Constitution.
+<img width="898" alt="image" src="https://github.com/user-attachments/assets/777d730c-add4-4e97-a878-41ed88c58504" />
+
 
 ### 3. Legal Agent Supervisor
 In which the user can ask any query reagarding law, consitution, rules, different sections etc and our agent will give appropiate answer
+<img width="910" alt="image" src="https://github.com/user-attachments/assets/030a28e8-e849-459a-ae0b-9b60c7a44ef8" />
+
+
+
 
 
 ## Setup ⚙️ 
