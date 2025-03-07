@@ -142,5 +142,16 @@ setx GROQ_API_KEY "___________________" & setx PHI_AI_KEY "_____________________
 python app.py
 
 
+```
+
+## Usage :mag_right:
+
+1️⃣ Legal Research & Case Preparation Lawyers and law students can quickly analyze legal documents. Saves hours by summarizing lengthy legal texts. Provides accurate case law references based on the Indian Constitution.
+
+2️⃣ Instant Legal Consultation Users can ask legal questions and receive accurate, constitutionally aligned answers. Helps individuals understand their rights and legal options. Assists in legal aid services by offering quick legal insights.
+
+3️⃣ Efficient Document Review & Compliance Businesses and legal professionals can verify contracts and compliance documents. AI-driven insights help identify legal risks and obligations. Ensures legal documents adhere to Indian laws and regulations.
+
+
 
 
