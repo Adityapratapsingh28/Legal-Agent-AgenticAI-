@@ -129,6 +129,7 @@ docker run -d \
   phidata/pgvector:16
 
 # Step 8: Open Docker Desktop and start the 'pgvector' container manually
+check : open assets folder under - docker_image.png
 
 
 
